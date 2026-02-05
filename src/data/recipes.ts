@@ -26,7 +26,7 @@ export const featuredRecipes: FeaturedRecipe[] = [
     image:
       "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=800&q=80",
     rating: 4.9,
-    tags: ["Chef's Pick", "30–40 min"],
+    tags: ["Culinaria's Pick", "30–40 min"],
     ingredients: ["rice", "mushrooms", "parmesan", "butter", "onion", "stock"],
     difficulty: "Medium",
     time: "35 min",
