@@ -11,6 +11,8 @@
  * Educational use only - Commercial use prohibited.
  */
 
+import { Search, AlertTriangle } from "lucide-react";
+
 function ErrorMessage({
   message,
   darkMode = false,
@@ -39,7 +41,10 @@ function ErrorMessage({
           }`}
         >
           <div className="container mx-auto flex items-center justify-center">
-            <span className="text-2xl mr-3">⚠️</span>
+            <AlertTriangle
+              className="inline-block w-8 h-8 mr-3 text-amber-500 align-middle"
+              aria-hidden
+            />
             <span className="text-lg font-semibold">
               Search returned no results
             </span>
@@ -55,7 +60,14 @@ function ErrorMessage({
             }`}
           >
             {/* Large Icon */}
-            <div className="text-8xl mb-8">🔍</div>
+            <div className="text-8xl mb-8 leading-none">
+              <Search
+                className={`inline-block w-[1em] h-[1em] ${
+                  darkMode ? "text-stone-400" : "text-red-300"
+                }`}
+                aria-hidden
+              />
+            </div>
 
             {/* Main Message */}
             <h3
@@ -63,7 +75,7 @@ function ErrorMessage({
                 darkMode ? "text-white" : "text-red-800"
               }`}
             >
-              ❌ No Recipes Found
+              No Recipes Found
             </h3>
 
             <p
@@ -140,18 +152,18 @@ function ErrorMessage({
                     onClick={() => {
                       // Trigger a new search with this term
                       const searchInput = document.querySelector(
-                        'input[type="text"]',
+                        'input[type="text"]'
                       ) as HTMLInputElement | null;
                       if (searchInput) {
                         (searchInput as HTMLInputElement).value = term;
                         searchInput.dispatchEvent(
-                          new Event("input", { bubbles: true }),
+                          new Event("input", { bubbles: true })
                         );
                         // Trigger search (you might need to adjust this based on your search implementation)
                         const searchForm = searchInput.closest("form");
                         if (searchForm) {
                           searchForm.dispatchEvent(
-                            new Event("submit", { bubbles: true }),
+                            new Event("submit", { bubbles: true })
                           );
                         }
                       }
@@ -174,12 +186,12 @@ function ErrorMessage({
                 onClick={() => {
                   // Clear the search and show default content
                   const searchInput = document.querySelector(
-                    'input[type="text"]',
+                    'input[type="text"]'
                   ) as HTMLInputElement | null;
                   if (searchInput) {
                     (searchInput as HTMLInputElement).value = "";
                     searchInput.dispatchEvent(
-                      new Event("input", { bubbles: true }),
+                      new Event("input", { bubbles: true })
                     );
                   }
                 }}
@@ -243,4 +255,3 @@ function ErrorMessage({
 }
 
 export default ErrorMessage;
-
