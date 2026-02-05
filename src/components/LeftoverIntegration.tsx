@@ -14,6 +14,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { Link } from "react-router-dom";
 import { isHalal, isNonHalalIngredient } from "../utils/halal";
+import { PLACEHOLDER_IMAGE_SVG } from "../utils/imagePlaceholder";
 import OptimizedImage from "./ui/OptimizedImage";
 
 const MEALDB_BASE = "https://www.themealdb.com/api/json/v1/1";
@@ -63,7 +64,7 @@ const LeftoverIntegration: React.FC<LeftoverIntegrationProps> = ({
   const fetchLeftoverSuggestions = useCallback(
     async (
       ingredients: string[],
-      currentRecipeId?: string,
+      currentRecipeId?: string
     ): Promise<LeftoverRecipeSuggestion[]> => {
       if (!ingredients.length) return [];
       const normalized = ingredients
@@ -87,7 +88,7 @@ const LeftoverIntegration: React.FC<LeftoverIntegrationProps> = ({
           .replace(/^./, (c) => c.toUpperCase());
         try {
           const res = await fetch(
-            `${MEALDB_BASE}/filter.php?i=${encodeURIComponent(param)}`,
+            `${MEALDB_BASE}/filter.php?i=${encodeURIComponent(param)}`
           );
           const json = (await res.json()) as {
             meals?: Array<{
@@ -128,9 +129,12 @@ const LeftoverIntegration: React.FC<LeftoverIntegrationProps> = ({
         if (suggestions.length >= 12) break;
         try {
           const res = await fetch(`${MEALDB_BASE}/lookup.php?i=${idMeal}`);
-          const json = (await res.json()) as { meals?: Array<Record<string, unknown>> };
+          const json = (await res.json()) as {
+            meals?: Array<Record<string, unknown>>;
+          };
           const meal = json.meals?.[0];
-          if (!meal || !isHalal(meal as Parameters<typeof isHalal>[0])) continue;
+          if (!meal || !isHalal(meal as Parameters<typeof isHalal>[0]))
+            continue;
           id += 1;
           suggestions.push({
             id,
@@ -138,7 +142,9 @@ const LeftoverIntegration: React.FC<LeftoverIntegrationProps> = ({
             name: v.strMeal,
             description:
               v.matched.length > 0
-                ? `Uses your leftovers: ${v.matched.slice(0, 5).join(", ")}${v.matched.length > 5 ? "…" : ""}`
+                ? `Uses your leftovers: ${v.matched.slice(0, 5).join(", ")}${
+                    v.matched.length > 5 ? "…" : ""
+                  }`
                 : "From TheMealDB",
             ingredients: v.matched,
             difficulty: "Easy",
@@ -152,7 +158,7 @@ const LeftoverIntegration: React.FC<LeftoverIntegrationProps> = ({
       }
       return suggestions;
     },
-    [],
+    []
   );
 
   useEffect(() => {
@@ -179,7 +185,7 @@ const LeftoverIntegration: React.FC<LeftoverIntegrationProps> = ({
     setSelectedIngredients((prev) =>
       prev.includes(ingredient)
         ? prev.filter((ing) => ing !== ingredient)
-        : [...prev, ingredient],
+        : [...prev, ingredient]
     );
   };
 
@@ -222,8 +228,8 @@ const LeftoverIntegration: React.FC<LeftoverIntegrationProps> = ({
                   selectedIngredients.includes(ingredient)
                     ? "bg-green-500 text-white"
                     : darkMode
-                      ? "bg-green-700/50 text-green-200 border border-green-500"
-                      : "bg-green-100 text-green-800 border border-green-300"
+                    ? "bg-green-700/50 text-green-200 border border-green-500"
+                    : "bg-green-100 text-green-800 border border-green-300"
                 }`}
               >
                 {ingredient}
@@ -266,7 +272,7 @@ const LeftoverIntegration: React.FC<LeftoverIntegrationProps> = ({
                       src={suggestion.image}
                       alt={suggestion.name}
                       className="w-full h-full object-cover"
-                      fallbackSrc="🍳"
+                      fallbackSrc={PLACEHOLDER_IMAGE_SVG}
                     />
                   </div>
                   <div className="p-3 sm:p-4">
@@ -277,29 +283,29 @@ const LeftoverIntegration: React.FC<LeftoverIntegrationProps> = ({
                       {suggestion.description}
                     </p>
                     <div className="flex flex-wrap gap-1">
-                        {suggestion.ingredients
-                          .slice(0, 3)
-                          .map((ingredient, index) => (
-                            <span
-                              key={index}
-                              className={`px-1.5 py-0.5 rounded text-xs ${
-                                currentIngredients.some(
-                                  (ing) =>
-                                    ing.includes(ingredient) ||
-                                    ingredient.includes(ing),
-                                )
-                                  ? "bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-200"
-                                  : "bg-stone-100 text-gray-600 dark:bg-neutral-700 dark:text-stone-300"
-                              }`}
-                            >
-                              {ingredient}
-                            </span>
-                          ))}
-                        {suggestion.ingredients.length > 3 && (
-                          <span className="px-1.5 py-0.5 rounded text-xs bg-stone-100 text-gray-600 dark:bg-neutral-700 dark:text-stone-300">
-                            +{suggestion.ingredients.length - 3}
+                      {suggestion.ingredients
+                        .slice(0, 3)
+                        .map((ingredient, index) => (
+                          <span
+                            key={index}
+                            className={`px-1.5 py-0.5 rounded text-xs ${
+                              currentIngredients.some(
+                                (ing) =>
+                                  ing.includes(ingredient) ||
+                                  ingredient.includes(ing)
+                              )
+                                ? "bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-200"
+                                : "bg-stone-100 text-gray-600 dark:bg-neutral-700 dark:text-stone-300"
+                            }`}
+                          >
+                            {ingredient}
                           </span>
-                        )}
+                        ))}
+                      {suggestion.ingredients.length > 3 && (
+                        <span className="px-1.5 py-0.5 rounded text-xs bg-stone-100 text-gray-600 dark:bg-neutral-700 dark:text-stone-300">
+                          +{suggestion.ingredients.length - 3}
+                        </span>
+                      )}
                     </div>
                   </div>
                 </Link>

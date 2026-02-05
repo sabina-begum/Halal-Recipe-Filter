@@ -12,6 +12,15 @@
  */
 
 import { useState, useEffect, useCallback } from "react";
+import {
+  UtensilsCrossed,
+  Clock,
+  AlertTriangle,
+  Lightbulb,
+  ShoppingCart,
+  BarChart3,
+  Bell,
+} from "lucide-react";
 import { useAuth } from "../contexts/useAuth";
 import { countUniqueBy } from "../utils/arrayUtils";
 
@@ -49,7 +58,7 @@ const SmartNotifications = ({ darkMode }: { darkMode: boolean }) => {
     if (!currentUser) return;
     try {
       const savedNotifications = JSON.parse(
-        localStorage.getItem(`notifications_${currentUser.uid}`) || "[]",
+        localStorage.getItem(`notifications_${currentUser.uid}`) || "[]"
       );
       setNotifications(savedNotifications);
     } catch (error) {
@@ -67,7 +76,7 @@ const SmartNotifications = ({ darkMode }: { darkMode: boolean }) => {
       } else {
         const savedSettings = JSON.parse(
           localStorage.getItem(`notification_settings_${currentUser.uid}`) ||
-            "{}",
+            "{}"
         );
         setSettings({ ...settings, ...savedSettings });
       }
@@ -92,7 +101,7 @@ const SmartNotifications = ({ darkMode }: { darkMode: boolean }) => {
       } else {
         localStorage.setItem(
           `notification_settings_${currentUser.uid}`,
-          JSON.stringify(newSettings),
+          JSON.stringify(newSettings)
         );
       }
     } catch (error) {
@@ -103,13 +112,13 @@ const SmartNotifications = ({ darkMode }: { darkMode: boolean }) => {
   const markAsRead = (notificationId: number) => {
     if (!currentUser) return;
     const updated = notifications.map((n: Notification) =>
-      n.id === notificationId ? { ...n, read: true } : n,
+      n.id === notificationId ? { ...n, read: true } : n
     );
     setNotifications(updated);
     if (!isDemoUser) {
       localStorage.setItem(
         `notifications_${currentUser.uid}`,
-        JSON.stringify(updated),
+        JSON.stringify(updated)
       );
     }
   };
@@ -117,13 +126,13 @@ const SmartNotifications = ({ darkMode }: { darkMode: boolean }) => {
   const deleteNotification = (notificationId: number) => {
     if (!currentUser) return;
     const updated = notifications.filter(
-      (n: Notification) => n.id !== notificationId,
+      (n: Notification) => n.id !== notificationId
     );
     setNotifications(updated);
     if (!isDemoUser) {
       localStorage.setItem(
         `notifications_${currentUser.uid}`,
-        JSON.stringify(updated),
+        JSON.stringify(updated)
       );
     }
   };
@@ -137,22 +146,23 @@ const SmartNotifications = ({ darkMode }: { darkMode: boolean }) => {
     saveSettings(newSettings);
   };
 
+  const iconClass = "w-6 h-6 shrink-0";
   const getNotificationIcon = (type: string) => {
     switch (type) {
       case "meal_prep":
-        return "🍽️";
+        return <UtensilsCrossed className={iconClass} aria-hidden />;
       case "cooking_timer":
-        return "⏰";
+        return <Clock className={iconClass} aria-hidden />;
       case "ingredient_expiry":
-        return "⚠️";
+        return <AlertTriangle className={iconClass} aria-hidden />;
       case "recipe_suggestion":
-        return "💡";
+        return <Lightbulb className={iconClass} aria-hidden />;
       case "shopping_reminder":
-        return "🛒";
+        return <ShoppingCart className={iconClass} aria-hidden />;
       case "nutrition_goal":
-        return "📊";
+        return <BarChart3 className={iconClass} aria-hidden />;
       default:
-        return "🔔";
+        return <Bell className={iconClass} aria-hidden />;
     }
   };
 
@@ -277,14 +287,14 @@ const SmartNotifications = ({ darkMode }: { darkMode: boolean }) => {
               >
                 <div className="flex items-start justify-between">
                   <div className="flex items-start space-x-3 flex-1">
-                    <span className="text-2xl">
+                    <span className="flex-shrink-0 mt-0.5">
                       {getNotificationIcon(notification.type)}
                     </span>
                     <div className="flex-1">
                       <div className="flex items-center space-x-2 mb-1">
                         <h4
                           className={`font-medium ${getPriorityTextColor(
-                            notification.priority,
+                            notification.priority
                           )}`}
                         >
                           {notification.title}
@@ -345,7 +355,7 @@ const SmartNotifications = ({ darkMode }: { darkMode: boolean }) => {
                 <span className="font-medium">High Priority:</span>{" "}
                 {
                   notifications.filter(
-                    (n: Notification) => n.priority === "high",
+                    (n: Notification) => n.priority === "high"
                   ).length
                 }
               </div>
@@ -365,13 +375,13 @@ const SmartNotifications = ({ darkMode }: { darkMode: boolean }) => {
                 (n: Notification) => ({
                   ...n,
                   read: true,
-                }),
+                })
               );
               setNotifications(updatedNotifications);
               if (!isDemoUser) {
                 localStorage.setItem(
                   `notifications_${currentUser.uid}`,
-                  JSON.stringify(updatedNotifications),
+                  JSON.stringify(updatedNotifications)
                 );
               }
             }}
@@ -389,7 +399,7 @@ const SmartNotifications = ({ darkMode }: { darkMode: boolean }) => {
               if (!isDemoUser) {
                 localStorage.setItem(
                   `notifications_${currentUser.uid}`,
-                  JSON.stringify([]),
+                  JSON.stringify([])
                 );
               }
             }}

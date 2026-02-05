@@ -13,9 +13,22 @@
 
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { Link } from "react-router-dom";
+import {
+  UtensilsCrossed,
+  Sunrise,
+  Sun,
+  Moon,
+  Cake,
+  Popcorn,
+  Heart,
+  Clock,
+  Star,
+  X,
+} from "lucide-react";
 import { useAuth } from "../contexts/useAuth";
 import OptimizedImage from "./ui/OptimizedImage";
 import LoadingSpinner from "./LoadingSpinner";
+import { PLACEHOLDER_IMAGE_SVG } from "../utils/imagePlaceholder";
 
 interface FavoritesProps {
   darkMode: boolean;
@@ -75,13 +88,13 @@ const Favorites: React.FC<FavoritesProps> = ({ darkMode }) => {
       if (isDemoUser) {
         // Read from demoUser key
         const demoUserData = JSON.parse(
-          localStorage.getItem("demoUser") || "{}",
+          localStorage.getItem("demoUser") || "{}"
         );
         userFavorites = demoUserData.demoData?.favorites || [];
       } else {
         // Read from favorites_<uid>
         userFavorites = JSON.parse(
-          localStorage.getItem(`favorites_${currentUser.uid}`) || "[]",
+          localStorage.getItem(`favorites_${currentUser.uid}`) || "[]"
         );
       }
 
@@ -91,12 +104,12 @@ const Favorites: React.FC<FavoritesProps> = ({ darkMode }) => {
       if (!isDemoUser) {
         localStorage.setItem(
           `favorites_${currentUser.uid}`,
-          JSON.stringify(normalizedFavorites),
+          JSON.stringify(normalizedFavorites)
         );
       } else {
         // For demo user, update demoUser key if needed
         const demoUserData = JSON.parse(
-          localStorage.getItem("demoUser") || "{}",
+          localStorage.getItem("demoUser") || "{}"
         );
         demoUserData.demoData = demoUserData.demoData || {};
         demoUserData.demoData.favorites = normalizedFavorites;
@@ -119,7 +132,7 @@ const Favorites: React.FC<FavoritesProps> = ({ darkMode }) => {
 
       try {
         const updatedFavorites = favorites.filter(
-          (fav) => (fav.id || fav.recipeId) !== recipeId,
+          (fav) => (fav.id || fav.recipeId) !== recipeId
         );
         setFavorites(updatedFavorites);
 
@@ -127,11 +140,11 @@ const Favorites: React.FC<FavoritesProps> = ({ darkMode }) => {
         if (!isDemoUser) {
           localStorage.setItem(
             `favorites_${currentUser.uid}`,
-            JSON.stringify(updatedFavorites),
+            JSON.stringify(updatedFavorites)
           );
         } else {
           const demoUserData = JSON.parse(
-            localStorage.getItem("demoUser") || "{}",
+            localStorage.getItem("demoUser") || "{}"
           );
           demoUserData.demoData = demoUserData.demoData || {};
           demoUserData.demoData.favorites = updatedFavorites;
@@ -142,7 +155,7 @@ const Favorites: React.FC<FavoritesProps> = ({ darkMode }) => {
         setError("Failed to remove favorite");
       }
     },
-    [favorites, currentUser, isDemoUser],
+    [favorites, currentUser, isDemoUser]
   );
 
   // Memoized filter change handler
@@ -177,17 +190,18 @@ const Favorites: React.FC<FavoritesProps> = ({ darkMode }) => {
     });
   }, [favorites, filter]);
 
-  // Memoized filter options
+  // Memoized filter options (Lucide icons)
+  const iconClass = "w-4 h-4 shrink-0";
   const filterOptions = useMemo(
     () => [
-      { value: "all", label: "All Recipes", icon: "🍽️" },
-      { value: "breakfast", label: "Breakfast", icon: "🌅" },
-      { value: "lunch", label: "Lunch", icon: "☀️" },
-      { value: "dinner", label: "Dinner", icon: "🌙" },
-      { value: "dessert", label: "Desserts", icon: "🍰" },
-      { value: "snack", label: "Snacks", icon: "🍿" },
+      { value: "all", label: "All Recipes", Icon: UtensilsCrossed },
+      { value: "breakfast", label: "Breakfast", Icon: Sunrise },
+      { value: "lunch", label: "Lunch", Icon: Sun },
+      { value: "dinner", label: "Dinner", Icon: Moon },
+      { value: "dessert", label: "Desserts", Icon: Cake },
+      { value: "snack", label: "Snacks", Icon: Popcorn },
     ],
-    [],
+    []
   );
 
   if (!currentUser) {
@@ -248,11 +262,11 @@ const Favorites: React.FC<FavoritesProps> = ({ darkMode }) => {
                     ? "bg-green-600 text-white shadow-lg"
                     : "bg-green-500 text-white shadow-lg"
                   : darkMode
-                    ? "bg-stone-700 text-stone-200 hover:bg-stone-600"
-                    : "bg-white text-gray-700 hover:bg-gray-50 border border-gray-200"
+                  ? "bg-stone-700 text-stone-200 hover:bg-stone-600"
+                  : "bg-white text-gray-700 hover:bg-gray-50 border border-gray-200"
               }`}
             >
-              <span>{option.icon}</span>
+              <option.Icon className={iconClass} aria-hidden />
               <span className="text-sm font-medium">{option.label}</span>
             </button>
           ))}
@@ -268,7 +282,9 @@ const Favorites: React.FC<FavoritesProps> = ({ darkMode }) => {
         {/* Favorites Grid */}
         {filteredFavorites.length === 0 ? (
           <div className="text-center py-12">
-            <div className="text-6xl mb-4">❤️</div>
+            <div className="text-6xl mb-4 text-red-500 leading-none">
+              <Heart className="inline-block w-[1em] h-[1em]" aria-hidden />
+            </div>
             <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
               No favorites yet
             </h3>
@@ -294,14 +310,14 @@ const Favorites: React.FC<FavoritesProps> = ({ darkMode }) => {
                     src={recipe.image}
                     alt={recipe.title}
                     className="w-full h-48 object-cover"
-                    fallbackSrc="🍳"
+                    fallbackSrc={PLACEHOLDER_IMAGE_SVG}
                   />
                   <button
                     onClick={() => removeFavorite(recipe.id)}
                     className="absolute top-2 right-2 p-2 bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors"
                     aria-label="Remove from favorites"
                   >
-                    ❌
+                    <X className="w-4 h-4" aria-hidden />
                   </button>
                 </div>
 
@@ -315,10 +331,18 @@ const Favorites: React.FC<FavoritesProps> = ({ darkMode }) => {
 
                   <div className="flex items-center justify-between mb-3">
                     <span className="text-sm text-gray-500 dark:text-stone-400">
-                      ⏱️ {recipe.cookTime} min
+                      <Clock
+                        className="inline-block w-4 h-4 mr-1 align-middle"
+                        aria-hidden
+                      />
+                      {recipe.cookTime} min
                     </span>
                     <span className="text-sm text-gray-500 dark:text-stone-400">
-                      ⭐ {recipe.rating}
+                      <Star
+                        className="inline-block w-4 h-4 mr-1 align-middle fill-amber-400 text-amber-400"
+                        aria-hidden
+                      />
+                      {recipe.rating}
                     </span>
                   </div>
 

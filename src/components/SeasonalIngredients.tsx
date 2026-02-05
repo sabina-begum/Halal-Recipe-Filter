@@ -13,6 +13,7 @@
 
 import { useState, useEffect, useMemo } from "react";
 import { Link } from "react-router-dom";
+import { Clock, UtensilsCrossed } from "lucide-react";
 import { featuredRecipes } from "../data/recipes";
 
 interface Ingredient {
@@ -41,14 +42,14 @@ interface SeasonalIngredientsProps {
 const SeasonalIngredients = ({ darkMode }: SeasonalIngredientsProps) => {
   const [currentSeason, setCurrentSeason] = useState<string>("");
   const [seasonalIngredients, setSeasonalIngredients] = useState<Ingredient[]>(
-    [],
+    []
   );
   const [selectedSeason, setSelectedSeason] = useState<string>("");
 
   // Real recipes from featuredRecipes filtered by selected season
   const seasonalRecipes = useMemo(
     () => featuredRecipes.filter((r) => r.seasons?.includes(selectedSeason)),
-    [selectedSeason],
+    [selectedSeason]
   );
 
   // Determine current season
@@ -376,7 +377,7 @@ const SeasonalIngredients = ({ darkMode }: SeasonalIngredientsProps) => {
         ],
       },
     }),
-    [],
+    []
   );
 
   useEffect(() => {
@@ -463,11 +464,11 @@ const SeasonalIngredients = ({ darkMode }: SeasonalIngredientsProps) => {
                 className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
                   selectedSeason === season
                     ? `${getSeasonBgColor(season)} ${getSeasonColor(
-                        season,
+                        season
                       )} border-2 border-current`
                     : darkMode
-                      ? "bg-indigo-700/50 text-indigo-200 border border-indigo-500"
-                      : "bg-indigo-100 text-indigo-800 border border-indigo-300"
+                    ? "bg-indigo-700/50 text-indigo-200 border border-indigo-500"
+                    : "bg-indigo-100 text-indigo-800 border border-indigo-300"
                 }`}
               >
                 {season}
@@ -537,15 +538,27 @@ const SeasonalIngredients = ({ darkMode }: SeasonalIngredientsProps) => {
                     <h5 className="font-medium text-sm">{recipe.name}</h5>
                     <span
                       className={`px-2 py-1 rounded-full text-xs font-medium ${getSeasonBgColor(
-                        selectedSeason,
+                        selectedSeason
                       )} ${getSeasonColor(selectedSeason)}`}
                     >
                       {recipe.difficulty ?? "—"}
                     </span>
                   </div>
                   <div className="text-xs text-gray-600 dark:text-stone-300 space-y-1">
-                    <div>⏱️ {recipe.time ?? "—"}</div>
-                    <div>🍽️ {recipe.category ?? "—"}</div>
+                    <div>
+                      <Clock
+                        className="inline-block w-3.5 h-3.5 mr-1 align-middle"
+                        aria-hidden
+                      />
+                      {recipe.time ?? "—"}
+                    </div>
+                    <div>
+                      <UtensilsCrossed
+                        className="inline-block w-3.5 h-3.5 mr-1 align-middle"
+                        aria-hidden
+                      />
+                      {recipe.category ?? "—"}
+                    </div>
                   </div>
                 </Link>
               ))
@@ -577,7 +590,7 @@ const SeasonalIngredients = ({ darkMode }: SeasonalIngredientsProps) => {
         {currentSeason && (
           <div
             className={`mt-4 p-3 rounded-lg ${getSeasonBgColor(
-              currentSeason,
+              currentSeason
             )} border border-current`}
           >
             <p className={`text-sm ${getSeasonColor(currentSeason)}`}>

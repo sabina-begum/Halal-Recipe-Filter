@@ -1,4 +1,13 @@
 import React, { useEffect, useState } from "react";
+import {
+  UtensilsCrossed,
+  Clock,
+  AlertTriangle,
+  Lightbulb,
+  ShoppingCart,
+  BarChart3,
+  Bell,
+} from "lucide-react";
 import { useAuth } from "../contexts/useAuth";
 
 export interface Notification {
@@ -17,22 +26,24 @@ interface NotificationsModalProps {
   darkMode: boolean;
 }
 
-const getNotificationIcon = (type: string): string => {
+const iconClass = "w-6 h-6 shrink-0";
+
+const getNotificationIcon = (type: string): React.ReactNode => {
   switch (type) {
     case "meal_prep":
-      return "🍽️";
+      return <UtensilsCrossed className={iconClass} aria-hidden />;
     case "cooking_timer":
-      return "⏰";
+      return <Clock className={iconClass} aria-hidden />;
     case "ingredient_expiry":
-      return "⚠️";
+      return <AlertTriangle className={iconClass} aria-hidden />;
     case "recipe_suggestion":
-      return "💡";
+      return <Lightbulb className={iconClass} aria-hidden />;
     case "shopping_reminder":
-      return "🛒";
+      return <ShoppingCart className={iconClass} aria-hidden />;
     case "nutrition_goal":
-      return "📊";
+      return <BarChart3 className={iconClass} aria-hidden />;
     default:
-      return "🔔";
+      return <Bell className={iconClass} aria-hidden />;
   }
 };
 
@@ -50,7 +61,7 @@ const NotificationsModal: React.FC<NotificationsModalProps> = ({
     if (currentUser) {
       try {
         const saved: Notification[] = JSON.parse(
-          localStorage.getItem(`notifications_${currentUser.uid}`) || "[]",
+          localStorage.getItem(`notifications_${currentUser.uid}`) || "[]"
         );
         setNotifications(Array.isArray(saved) ? saved : []);
       } catch {
@@ -70,13 +81,13 @@ const NotificationsModal: React.FC<NotificationsModalProps> = ({
   // Mark as read (persist for both demo and real users)
   const markAsRead = (id: number): void => {
     const updated = notifications.map((n) =>
-      n.id === id ? { ...n, read: true } : n,
+      n.id === id ? { ...n, read: true } : n
     );
     setNotifications(updated);
     if (currentUser) {
       localStorage.setItem(
         `notifications_${currentUser.uid}`,
-        JSON.stringify(updated),
+        JSON.stringify(updated)
       );
     }
   };
@@ -88,7 +99,7 @@ const NotificationsModal: React.FC<NotificationsModalProps> = ({
     if (currentUser) {
       localStorage.setItem(
         `notifications_${currentUser.uid}`,
-        JSON.stringify(updated),
+        JSON.stringify(updated)
       );
     }
   };
@@ -120,7 +131,7 @@ const NotificationsModal: React.FC<NotificationsModalProps> = ({
           )}
           {notifications.map((n) => (
             <li key={n.id} className="py-3 flex items-start gap-3">
-              <span className="text-2xl mt-1">
+              <span className="flex-shrink-0 mt-1">
                 {getNotificationIcon(n.type)}
               </span>
               <div className="flex-1">

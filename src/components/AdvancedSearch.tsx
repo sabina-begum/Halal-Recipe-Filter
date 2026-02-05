@@ -12,6 +12,16 @@
  */
 
 import React, { useState } from "react";
+import {
+  Search,
+  Check,
+  X,
+  ChefHat,
+  BarChart2,
+  Clock,
+  Globe,
+  Salad,
+} from "lucide-react";
 
 interface AdvancedSearchProps {
   onSearch: (params: SearchParams) => void;
@@ -569,22 +579,76 @@ const AdvancedSearch: React.FC<AdvancedSearchProps> = ({
                   }`}
                 >
                   {searchQuery && (
-                    <div>🔍 Query: &quot;{searchQuery}&quot;</div>
+                    <div>
+                      <Search
+                        className="inline-block w-4 h-4 mr-1.5 align-middle"
+                        aria-hidden
+                      />
+                      Query: &quot;{searchQuery}&quot;
+                    </div>
                   )}
                   {includedIngredients.length > 0 && (
-                    <div>✅ Must include: {includedIngredients.join(", ")}</div>
+                    <div>
+                      <Check
+                        className="inline-block w-4 h-4 mr-1.5 align-middle text-green-600 dark:text-green-400"
+                        aria-hidden
+                      />
+                      Must include: {includedIngredients.join(", ")}
+                    </div>
                   )}
                   {excludedIngredients.length > 0 && (
-                    <div>❌ Exclude: {excludedIngredients.join(", ")}</div>
+                    <div>
+                      <X
+                        className="inline-block w-4 h-4 mr-1.5 align-middle text-red-500"
+                        aria-hidden
+                      />
+                      Exclude: {excludedIngredients.join(", ")}
+                    </div>
                   )}
                   {cookingMethods.length > 0 && (
-                    <div>🍳 Methods: {cookingMethods.join(", ")}</div>
+                    <div>
+                      <ChefHat
+                        className="inline-block w-4 h-4 mr-1.5 align-middle"
+                        aria-hidden
+                      />
+                      Methods: {cookingMethods.join(", ")}
+                    </div>
                   )}
-                  {difficulty && <div>📊 Difficulty: {difficulty}</div>}
-                  {maxTime && <div>⏱️ Max time: {maxTime}</div>}
-                  {cuisine && <div>🌍 Cuisine: {cuisine}</div>}
+                  {difficulty && (
+                    <div>
+                      <BarChart2
+                        className="inline-block w-4 h-4 mr-1.5 align-middle"
+                        aria-hidden
+                      />
+                      Difficulty: {difficulty}
+                    </div>
+                  )}
+                  {maxTime && (
+                    <div>
+                      <Clock
+                        className="inline-block w-4 h-4 mr-1.5 align-middle"
+                        aria-hidden
+                      />
+                      Max time: {maxTime}
+                    </div>
+                  )}
+                  {cuisine && (
+                    <div>
+                      <Globe
+                        className="inline-block w-4 h-4 mr-1.5 align-middle"
+                        aria-hidden
+                      />
+                      Cuisine: {cuisine}
+                    </div>
+                  )}
                   {dietaryRestrictions.length > 0 && (
-                    <div>🥗 Dietary: {dietaryRestrictions.join(", ")}</div>
+                    <div>
+                      <Salad
+                        className="inline-block w-4 h-4 mr-1.5 align-middle"
+                        aria-hidden
+                      />
+                      Dietary: {dietaryRestrictions.join(", ")}
+                    </div>
                   )}
                 </div>
               </div>
