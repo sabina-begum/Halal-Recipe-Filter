@@ -64,7 +64,7 @@ function AIFeaturesPage({ darkMode, onSearch }: AIFeaturesPageProps) {
         <div className="relative z-10 max-w-6xl mx-auto px-3 sm:px-4 lg:px-6 pt-4 sm:pt-8 lg:pt-12 pb-4 sm:pb-8 lg:pb-12">
           {/* Header */}
           <div className="text-center mb-12 sm:mb-16">
-            <h1 className="text-4xl font-extrabold text-center">
+            <h1 className="text-4xl font-extrabold text-center text-green-900">
               AI-Powered Cooking Features
             </h1>
             <p

@@ -14,7 +14,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { Clock, UtensilsCrossed } from "lucide-react";
-import { featuredRecipes } from "../data/recipes";
+import { featuredRecipes } from "../features/recipes/data/recipes";
 
 interface Ingredient {
   name: string;

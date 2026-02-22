@@ -10,7 +10,7 @@
  *
  * Educational use only - Commercial use prohibited.
  */
-import { featuredRecipes } from "../../data/recipes";
+import { featuredRecipes } from "./data/recipes";
 import { useState, useMemo, useCallback } from "react";
 import { Link } from "react-router-dom";
 
