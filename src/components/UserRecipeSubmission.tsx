@@ -15,10 +15,10 @@ import React, { useState } from "react";
 import { useAuth } from "../contexts/useAuth";
 import { addDoc, collection } from "firebase/firestore";
 import { db } from "../firebase/config";
-import { mealCategories } from "../data/mealCategories";
-import { cuisineOptions } from "../data/cuisineOptions";
-import { difficultyLevels } from "../data/difficultyLevels";
-import { featuredRecipes } from "../data/recipes";
+import { mealCategories } from "../features/recipes/data/mealCategories";
+import { cuisineOptions } from "../features/recipes/data/cuisineOptions";
+import { difficultyLevels } from "../features/recipes/data/difficultyLevels";
+import { featuredRecipes } from "../features/recipes/data/recipes";
 import { getUserDisplayName } from "../utils/userUtils";
 
 const EXAMPLE_IMAGE_PLACEHOLDER =

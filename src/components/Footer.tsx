@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import favicon from "../assets/favicon.svg";
+const favicon = "/favicon.svg";
 
 const NEWSLETTER_STORAGE_KEY = "culinaria_newsletter_subscribed";
 const NEWSLETTER_EMAIL_KEY = "culinaria_newsletter_email";

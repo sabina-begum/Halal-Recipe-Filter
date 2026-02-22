@@ -32,7 +32,10 @@ import { isHalal } from "./utils/halal";
 import Toast from "./components/Toast";
 import { AuthProvider } from "./contexts/AuthContext";
 import type { Recipe } from "./types/global";
-import { featuredRecipes, featuredRecipeToRecipe } from "./data/recipes";
+import {
+  featuredRecipes,
+  featuredRecipeToRecipe,
+} from "./features/recipes/data/recipes";
 
 // Lazy load components for better performance
 const MainLayout = lazy(() => import("./components/MainLayout"));

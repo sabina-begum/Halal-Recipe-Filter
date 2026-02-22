@@ -12,7 +12,7 @@
  */
 
 import React, { useState } from "react";
-import { cookingVideoTutorials } from "../data/cookingVideoTutorials";
+import { cookingVideoTutorials } from "../features/recipes/data/cookingVideoTutorials";
 import type { CookingVideoData } from "../data/cookingVideoTutorials";
 
 interface CookingVideosProps {

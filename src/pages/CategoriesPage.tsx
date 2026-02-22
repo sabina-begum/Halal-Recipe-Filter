@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ingredientCategories } from "../data/ingredientCategories";
+import { ingredientCategories } from "../features/recipes/data/ingredientCategories";
 
 const CategoriesPage = ({ darkMode }: { darkMode: boolean }) => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);

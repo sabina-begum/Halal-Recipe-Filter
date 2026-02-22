@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useAuth } from "../contexts/useAuth";
-import { ingredientCategories } from "../data/ingredientCategories";
+import { ingredientCategories } from "../features/recipes/data/ingredientCategories";
 
 export interface InventoryItem {
   id: number;
