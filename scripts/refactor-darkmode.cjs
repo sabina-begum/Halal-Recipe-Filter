@@ -26,7 +26,7 @@ console.log(`Found ${filesToRefactor.length} files to refactor`);
 
 filesToRefactor.forEach((filePath) => {
   let content = fs.readFileSync(filePath, "utf8");
-  if (!content.includes("=> {")) {
+  if (!content.includes("=> {") && !content.match(/function \w+\(/)) {
     console.log("SKIP (implicit return):", filePath);
     return;
   }
@@ -40,10 +40,20 @@ filesToRefactor.forEach((filePath) => {
       `import { useDarkMode } from "@/contexts/DarkModeContext";\n` + content;
   }
   // 2. Add hook inside component
+  const before = content;
   content = content.replace(
     /=> \{\n/,
     `=> {\n  const { darkMode } = useDarkMode()!;\n`,
   );
+
+  if (content === before) {
+    // arrow function replace didn't match, try function declaration
+    content = content.replace(
+      /function \w+\([^)]*\)\s*\{\n/,
+      (match) => match + `  const { darkMode } = useDarkMode()!;\n`,
+    );
+  }
+
   // 3. Remove darkMode from props
   // Solo: ({ darkMode }: { darkMode: boolean })
   content = content.replace(
