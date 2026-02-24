@@ -17,7 +17,7 @@ import AboutFeatures from "./AboutFeatures";
 import AboutTeam from "./AboutTeam";
 import AboutTech from "./AboutTech";
 import AboutContact from "./AboutContact";
-import { useDarkMode } from "../contexts/DarkModeContext";
+import { useDarkMode } from "@/contexts/DarkModeContext";
 
 const About = () => {
   const { darkMode } = useDarkMode()!;

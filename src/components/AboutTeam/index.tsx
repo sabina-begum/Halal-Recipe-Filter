@@ -1,5 +1,5 @@
 import team from "./data";
-import { useDarkMode } from "../../contexts/DarkModeContext";
+import { useDarkMode } from "@/contexts/DarkModeContext";
 
 const AboutTeam = () => {
   const { darkMode } = useDarkMode()!;

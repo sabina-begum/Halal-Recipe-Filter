@@ -1,5 +1,5 @@
 import techStack from "./data";
-import { useDarkMode } from "../../contexts/DarkModeContext";
+import { useDarkMode } from "@/contexts/DarkModeContext";
 
 const AboutTech = () => {
   const { darkMode } = useDarkMode()!;
