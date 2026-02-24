@@ -76,6 +76,6 @@ filesToRefactor.forEach((filePath) => {
   content = content.replace(/\{\s*darkMode\s*\}\s*,\s*/, "{ ");
   // 4. Remove darkMode={darkMode} from JSX
   content = content.replace(/\s*darkMode=\{darkMode\}/g, "");
-  // fs.writeFileSync(filePath, content);
-  console.log("WOULD REFACTOR:", filePath);
+  fs.writeFileSync(filePath, content);
+  // console.log("WOULD REFACTOR:", filePath);
 });
