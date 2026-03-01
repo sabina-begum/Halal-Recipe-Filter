@@ -25,6 +25,7 @@ import {
 } from "lucide-react";
 import { renderStars, handleShareReview } from "@/utils/ratingHelpers";
 import { formatDate } from "@/utils/dateUtils";
+import { useToast } from "@/contexts/ToastContext";
 
 interface RecipeReviewsProps {
   recipeId: string;
@@ -46,6 +47,7 @@ const RecipeReviews = ({
 }: RecipeReviewsProps) => {
   const { darkMode } = useDarkMode()!;
   const { currentUser } = useAuth() as { currentUser: User | null };
+  const toast = useToast();
   const [reviews, setReviews] = useState<Review[]>([]);
   const [userReview, setUserReview] = useState<UserReview>({
     rating: 0,
@@ -72,12 +74,12 @@ const RecipeReviews = ({
 
   const handleSubmitReview = useCallback(async () => {
     if (!currentUser) {
-      alert("Please log in to submit a review");
+      toast?.showToast("Please log in to submit a review");
       return;
     }
 
     if (userReview.rating === 0) {
-      alert("Please provide a rating");
+      toast?.showToast("Please provide a rating");
       return;
     }
 
@@ -119,12 +121,12 @@ const RecipeReviews = ({
     } finally {
       setLoading(false);
     }
-  }, [currentUser, userReview, reviews, recipeId]);
+  }, [currentUser, userReview, reviews, recipeId, recipeNameProp, toast]);
 
   const handleLikeReview = useCallback(
     (reviewId: string) => {
       if (!currentUser) {
-        alert("Please log in to like reviews");
+        toast?.showToast("Please log in to like reviews");
         return;
       }
 
@@ -139,13 +141,13 @@ const RecipeReviews = ({
         JSON.stringify(updatedReviews),
       );
     },
-    [currentUser, reviews, recipeId],
+    [currentUser, reviews, recipeId, toast],
   );
 
   const handleMarkHelpful = useCallback(
     (reviewId: string) => {
       if (!currentUser) {
-        alert("Please log in to mark reviews as helpful");
+        toast?.showToast("Please log in to mark reviews as helpful");
         return;
       }
 
@@ -160,7 +162,7 @@ const RecipeReviews = ({
         JSON.stringify(updatedReviews),
       );
     },
-    [currentUser, reviews, recipeId],
+    [currentUser, reviews, recipeId, toast],
   );
 
   const averageRating =
@@ -457,10 +459,13 @@ const RecipeReviews = ({
                   <div className="flex space-x-2">
                     <button
                       onClick={() =>
-                        handleShareReview({
-                          ...review,
-                          comment: review.comment || "",
-                        })
+                        handleShareReview(
+                          {
+                            ...review,
+                            comment: review.comment || "",
+                          },
+                          (msg) => toast?.showToast(msg),
+                        )
                       }
                       className={`p-1 rounded hover:bg-gray-100 ${
                         darkMode ? "hover:bg-neutral-700" : "hover:bg-gray-100"
