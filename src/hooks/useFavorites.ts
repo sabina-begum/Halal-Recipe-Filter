@@ -1,4 +1,5 @@
 import { useState, useCallback, useEffect } from "react";
+import { useToast } from "@/contexts/ToastContext";
 
 export interface Recipe {
   idMeal?: string;
@@ -52,6 +53,7 @@ export function useFavorites(
 ) {
   const [isFavorite, setIsFavorite] = useState(false);
   const [favoriteLoading, setFavoriteLoading] = useState(false);
+  const toast = useToast();
 
   // Migrate old favorites to normalized format
   const migrateFavorites = useCallback(() => {
@@ -110,7 +112,7 @@ export function useFavorites(
 
   const toggleFavorite = async () => {
     if (!currentUser) {
-      alert("Please log in to save favorites");
+      toast?.showToast("Please log in to save favorites");
       return;
     }
     setFavoriteLoading(true);

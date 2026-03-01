@@ -27,8 +27,12 @@ export const renderStars = (rating: number, size: string = "w-4 h-4") => {
 /**
  * Shares a review using the Web Share API or clipboard fallback.
  * @param {object} review
+ * @param {(message: string) => void} [onCopied] - Called when text is copied to clipboard (e.g. show toast)
  */
-export const handleShareReview = (review: Review) => {
+export const handleShareReview = (
+  review: Review,
+  onCopied?: (message: string) => void,
+) => {
   const shareText = `Check out this ${
     review.rating
   }-star review for a recipe! "${review.comment.substring(0, 100)}..."`;
@@ -41,6 +45,6 @@ export const handleShareReview = (review: Review) => {
     });
   } else {
     navigator.clipboard.writeText(shareText);
-    alert("Review link copied to clipboard!");
+    onCopied?.("Review link copied to clipboard!");
   }
 };

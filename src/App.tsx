@@ -30,6 +30,7 @@ import performanceService from "./services/performanceService";
 import { extractIngredientsFromRecipe } from "./utils/apiUtils";
 import { isHalal } from "./utils/halal";
 import Toast from "./components/Toast";
+import { ToastContext } from "@/contexts/ToastContext";
 import { AuthProvider } from "./contexts/AuthContext";
 import type { Recipe } from "./types/global";
 import {
@@ -175,28 +176,30 @@ function App() {
         <HelmetProvider>
           <ModalProvider>
             <DarkModeProvider>
-              <main className="bg-main text-main min-h-screen">
-                <Suspense
-                  fallback={
-                    <div className="flex items-center justify-center min-h-screen">
-                      Loading...
-                    </div>
-                  }
-                >
-                  <MainLayout handleSearch={handleSearch}>
-                    <MainRoutes
-                      selected={selected}
-                      nutritionData={nutritionData}
-                      loading={loading}
-                      error={error}
-                      nutritionLoading={nutritionLoading}
-                    />
-                  </MainLayout>
-                  {toast && (
-                    <Toast message={toast} onClose={() => setToast(null)} />
-                  )}
-                </Suspense>
-              </main>
+              <ToastContext.Provider value={{ showToast: setToast }}>
+                <main className="bg-main text-main min-h-screen">
+                  <Suspense
+                    fallback={
+                      <div className="flex items-center justify-center min-h-screen">
+                        Loading...
+                      </div>
+                    }
+                  >
+                    <MainLayout handleSearch={handleSearch}>
+                      <MainRoutes
+                        selected={selected}
+                        nutritionData={nutritionData}
+                        loading={loading}
+                        error={error}
+                        nutritionLoading={nutritionLoading}
+                      />
+                    </MainLayout>
+                    {toast && (
+                      <Toast message={toast} onClose={() => setToast(null)} />
+                    )}
+                  </Suspense>
+                </main>
+              </ToastContext.Provider>
             </DarkModeProvider>
           </ModalProvider>
         </HelmetProvider>

@@ -14,6 +14,7 @@ import { useDarkMode } from "@/contexts/DarkModeContext";
 
 import React, { useState, useCallback } from "react";
 import { useAuth } from "@/contexts/useAuth";
+import { useToast } from "@/contexts/ToastContext";
 import {
   Crown,
   Star,
@@ -50,6 +51,7 @@ const PremiumFeatures: React.FC<PremiumFeaturesProps> = ({
 }) => {
   const { darkMode } = useDarkMode()!;
   const { currentUser } = useAuth();
+  const toast = useToast();
   const [selectedPlan, setSelectedPlan] = useState<string>("monthly");
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -130,7 +132,7 @@ const PremiumFeatures: React.FC<PremiumFeaturesProps> = ({
 
   const handleSubscribe = useCallback(async () => {
     if (!currentUser) {
-      alert("Please log in to subscribe to premium features");
+      toast?.showToast("Please log in to subscribe to premium features");
       return;
     }
 
@@ -156,15 +158,15 @@ const PremiumFeatures: React.FC<PremiumFeaturesProps> = ({
       };
       localStorage.setItem(`user_${currentUser.uid}`, JSON.stringify(userData));
 
-      alert("Welcome to CULINARIA Premium! 🎉");
+      toast?.showToast("Welcome to CULINARIA Premium! 🎉");
       onClose();
     } catch (error) {
       console.error("Subscription error:", error);
-      alert("Subscription failed. Please try again.");
+      toast?.showToast("Subscription failed. Please try again.");
     } finally {
       setLoading(false);
     }
-  }, [currentUser, selectedPlan, onClose]);
+  }, [currentUser, selectedPlan, onClose, toast]);
 
   return (
     <div
