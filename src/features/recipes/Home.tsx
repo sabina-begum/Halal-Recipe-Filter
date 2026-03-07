@@ -110,9 +110,8 @@ export default function HomePage({
               </h2>
               <p className="text-lg md:text-xl text-muted-foreground mb-8 text-center md:text-left max-w-xl">
                 Browse featured recipes, save favorites, plan meals, and build
-                shopping lists—all in one place. Recipes shown don&apos;t
-                include pork or alcohol; enabling you to cook with halal
-                ingredients from your usual shops.
+                shopping lists—all in one place. Recipes shown are
+                halal-friendly.
               </p>
               <a
                 href="#featured"
@@ -295,7 +294,7 @@ export default function HomePage({
           </div>
           <div className="space-y-4">
             <h2 className="text-xl font-semibold mb-4">Method & Nutrition</h2>
-            <Instructions instructions={selected.strInstructions} />
+            <Instructions instructions={selected.strInstructions || ""} />
             <Nutrition
               nutrition={nutritionData || {}}
               loading={nutritionLoading}
@@ -384,7 +383,7 @@ export default function HomePage({
         <section className="bg-card rounded-lg shadow-sm p-6">
           <h2 className="text-xl font-semibold mb-4">Reviews</h2>
           <RecipeReviews
-            recipeId={selected.idMeal}
+            recipeId={selected.idMeal || ""}
             recipeName={
               (selected as { strMeal?: string; name?: string }).strMeal ??
               (selected as { strMeal?: string; name?: string }).name

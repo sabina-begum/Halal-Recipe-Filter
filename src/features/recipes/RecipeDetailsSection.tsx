@@ -71,9 +71,7 @@ export default function RecipeDetailsSection({
 
       <section className={sectionClass} aria-label="Method">
         <div className={sectionInner}>
-          <Instructions
-            instructions={selected.strInstructions}
-          />
+          <Instructions instructions={selected.strInstructions || ""} />
         </div>
       </section>
 
@@ -127,7 +125,7 @@ export default function RecipeDetailsSection({
       <section className={sectionClass} aria-label="Reviews">
         <div className={sectionInner}>
           <RecipeReviews
-            recipeId={selected.idMeal}
+            recipeId={selected.idMeal || ""}
             recipeName={selected.strMeal}
           />
         </div>

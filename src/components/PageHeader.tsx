@@ -17,7 +17,7 @@ export default function PageHeader({ isAuthPage }: PageHeaderProps) {
             darkMode ? "text-green-300" : "text-green-900"
           }`}
         >
-          Discover New Halal Recipes
+          Halal Recipe Filter
         </h1>
         <p
           className={`text-sm md:text-base lg:text-lg max-w-lg leading-relaxed ${
