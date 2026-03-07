@@ -28,15 +28,14 @@ const AboutContact = () => {
           {contactInfo.cta}
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-          <a
-            href={`mailto:${contactInfo.email}`}
-            className="px-6 py-3 rounded-lg font-semibold transition-colors bg-green-600 hover:bg-green-700 text-white"
-          >
+          <a className="px-6 py-3 rounded-lg font-semibold transition-colors bg-green-600 hover:bg-green-700 text-white">
             {contactInfo.button}
-          </a>
-          <span className={darkMode ? "text-stone-400" : "text-gray-600"}>
             {contactInfo.email}
-          </span>
+          </a>
+          <span
+            className={darkMode ? "text-stone-400" : "text-gray-600"}
+          ></span>
+          {contactInfo.email}
         </div>
       </div>
     </div>

@@ -50,15 +50,12 @@ const AboutTeam = () => {
               {member.bio}
             </p>
             <a
-              href={`mailto:${member.email}`}
               className={`font-medium ${
                 darkMode
                   ? "text-green-400 hover:text-green-300"
                   : "text-green-600 hover:text-green-700"
               }`}
-            >
-              {member.email}
-            </a>
+            ></a>
           </div>
         ))}
       </div>
