@@ -229,7 +229,6 @@ This project is licensed under the Proprietary License - see the [LICENSE](LICEN
 
 This is a proprietary project. For collaboration inquiries, please contact:
 
-- **Email**: begumsabina81193@gmail.com
 - **Developer**: Sabina Begum
 
 ## 📞 Support
