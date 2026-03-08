@@ -146,3 +146,5 @@ workbox-*.js
 *.bak
 *.backup
 *~
+
+CLAUDE.md
