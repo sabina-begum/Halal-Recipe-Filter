@@ -37,6 +37,7 @@ import {
   featuredRecipes,
   featuredRecipeToRecipe,
 } from "@/features/recipes/data/recipes";
+import { randomInt } from "@/utils/secureRandom";
 
 // Lazy load components for better performance
 const MainLayout = lazy(() => import("./components/MainLayout"));
@@ -99,8 +100,7 @@ function App() {
           return;
         }
 
-        const random =
-          filteredMeals[Math.floor(Math.random() * filteredMeals.length)];
+        const random = filteredMeals[randomInt(filteredMeals.length)];
         setSelected(random);
 
         // Extract ingredients and fetch nutrition data

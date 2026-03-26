@@ -13,6 +13,7 @@ import { useDarkMode } from "@/contexts/DarkModeContext";
  */
 
 import { useState, useEffect, useCallback } from "react";
+import { shuffleArray } from "@/utils/secureRandom";
 import LoadingSpinner from "./LoadingSpinner";
 import OptimizedImage from "./ui/OptimizedImage";
 import Button from "./ui/Button";
@@ -83,8 +84,8 @@ function AIRecommendations({
         recommendations.push(randomData.meals[0]);
       }
 
-      // Shuffle and limit to 6 recommendations
-      const shuffled = recommendations.sort(() => 0.5 - Math.random());
+      // Shuffle and limit to 6 recommendations (crypto-based shuffle)
+      const shuffled = shuffleArray(recommendations);
       setRecommendations(shuffled.slice(0, 6));
     } catch (err) {
       console.error("Error generating recommendations:", err);

@@ -43,9 +43,9 @@ export const SecurityProvider: React.FC<SecurityProviderProps> = ({
   const [securityToken, setSecurityToken] = useState<string>("");
   const [lastActivity, setLastActivity] = useState<number>(Date.now());
 
-  // Generate security token on mount
+  // Generate security token on mount (Web Crypto, not Math.random)
   useEffect(() => {
-    setSecurityToken("test-token-" + Math.random().toString(36).substring(2));
+    setSecurityToken(`test-token-${crypto.randomUUID()}`);
   }, []);
 
   // Track user activity
