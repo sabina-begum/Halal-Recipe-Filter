@@ -12,7 +12,7 @@ import { useDarkMode } from "@/contexts/DarkModeContext";
  * Educational use only - Commercial use prohibited.
  */
 
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useRef, useEffect } from "react";
 import { useAuth } from "@/contexts/useAuth";
 import { useToast } from "@/contexts/ToastContext";
 import {
@@ -54,6 +54,9 @@ const PremiumFeatures: React.FC<PremiumFeaturesProps> = ({
   const toast = useToast();
   const [selectedPlan, setSelectedPlan] = useState<string>("monthly");
   const [loading, setLoading] = useState<boolean>(false);
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const previouslyFocusedRef = useRef<HTMLElement | null>(null);
 
   const plans: Record<string, Plan> = {
     monthly: {
@@ -168,11 +171,65 @@ const PremiumFeatures: React.FC<PremiumFeaturesProps> = ({
     }
   }, [currentUser, selectedPlan, onClose, toast]);
 
+  useEffect(() => {
+    previouslyFocusedRef.current = document.activeElement as HTMLElement | null;
+    closeButtonRef.current?.focus();
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    const getFocusable = () => {
+      const root = dialogRef.current;
+      if (!root) return [] as HTMLElement[];
+      return Array.from(
+        root.querySelectorAll<HTMLElement>(
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+        ),
+      ).filter((el) => !el.hasAttribute("disabled"));
+    };
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        onClose();
+        return;
+      }
+      if (event.key !== "Tab") return;
+      const focusable = getFocusable();
+      if (!focusable.length) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      const active = document.activeElement as HTMLElement | null;
+
+      if (event.shiftKey && active === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && active === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+
+    document.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.removeEventListener("keydown", onKeyDown);
+      document.body.style.overflow = originalOverflow;
+      previouslyFocusedRef.current?.focus();
+    };
+  }, [onClose]);
+
   return (
     <div
-      className={`fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4`}
+      className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+      onMouseDown={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
     >
       <div
+        ref={dialogRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="premium-features-title"
+        aria-describedby="premium-features-description"
         className={`max-w-4xl w-full max-h-[90vh] overflow-y-auto rounded-2xl shadow-2xl ${
           darkMode ? "bg-neutral-900 text-white" : "bg-white text-gray-900"
         }`}
@@ -189,8 +246,11 @@ const PremiumFeatures: React.FC<PremiumFeaturesProps> = ({
                 <Crown className="w-6 h-6 text-white" />
               </div>
               <div>
-                <h2 className="text-2xl font-bold">Upgrade to Premium</h2>
+                <h2 id="premium-features-title" className="text-2xl font-bold">
+                  Upgrade to Premium
+                </h2>
                 <p
+                  id="premium-features-description"
                   className={`text-sm ${
                     darkMode ? "text-stone-300" : "text-gray-600"
                   }`}
@@ -203,10 +263,13 @@ const PremiumFeatures: React.FC<PremiumFeaturesProps> = ({
               </div>
             </div>
             <button
+              ref={closeButtonRef}
               onClick={onClose}
               className={`p-2 rounded-full hover:bg-gray-100 ${
                 darkMode ? "hover:bg-neutral-800" : "hover:bg-gray-100"
               }`}
+              type="button"
+              aria-label="Close premium features"
             >
               <X className="w-5 h-5" />
             </button>

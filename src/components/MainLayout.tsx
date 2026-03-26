@@ -103,7 +103,11 @@ export default function MainLayout({
           <FeatureNavbar />
         </>
       )}
-      <main className="flex-grow flex flex-col justify-center">
+      <main
+        id="main-content"
+        className="flex-grow flex flex-col justify-center"
+        tabIndex={-1}
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-16 py-8 md:py-12 lg:py-16">
           {children}
         </div>

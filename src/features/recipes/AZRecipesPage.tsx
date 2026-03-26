@@ -112,7 +112,7 @@ export default function AZRecipesPage() {
               <div className="w-full aspect-[4/3] bg-stone-100 dark:bg-black overflow-hidden">
                 <OptimizedImage
                   src={meal.strMealThumb}
-                  alt={meal.strMeal}
+                  alt=""
                   className="w-full h-full object-cover rounded-t-lg"
                   lazy={true}
                 />

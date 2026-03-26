@@ -13,11 +13,14 @@ export default function BasicInfoSection({
   const { darkMode } = useDarkMode()!;
   return (
     <div>
-      <h3 className="text-lg font-semibold mb-3">Basic Information</h3>
+      <h2 className="text-lg font-semibold mb-3">Basic Information</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <label className="block text-sm font-medium mb-2">Display Name</label>
+          <label htmlFor="profile-display-name" className="block text-sm font-medium mb-2">
+            Display Name
+          </label>
           <input
+            id="profile-display-name"
             type="text"
             value={profile.displayName}
             onChange={(e) =>

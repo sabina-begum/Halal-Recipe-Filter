@@ -1,5 +1,5 @@
 import { useDarkMode } from "@/contexts/DarkModeContext";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useAuth } from "@/contexts/useAuth";
 import { addNotification } from "@/utils/notificationUtils";
 
@@ -22,8 +22,58 @@ const QuickAddModal: React.FC<QuickAddModalProps> = ({ open, onClose }) => {
   const { darkMode } = useDarkMode()!;
   const { currentUser } = useAuth();
   const [name, setName] = useState<string>("");
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const previouslyFocusedRef = useRef<HTMLElement | null>(null);
 
   if (!open) return null;
+
+  useEffect(() => {
+    if (!open) return;
+    previouslyFocusedRef.current = document.activeElement as HTMLElement | null;
+    closeButtonRef.current?.focus();
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    const getFocusable = () => {
+      const root = dialogRef.current;
+      if (!root) return [] as HTMLElement[];
+      return Array.from(
+        root.querySelectorAll<HTMLElement>(
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+        ),
+      ).filter((el) => !el.hasAttribute("disabled"));
+    };
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        onClose();
+        return;
+      }
+      if (event.key !== "Tab") return;
+      const focusable = getFocusable();
+      if (!focusable.length) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      const active = document.activeElement as HTMLElement | null;
+
+      if (event.shiftKey && active === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && active === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+
+    document.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.removeEventListener("keydown", onKeyDown);
+      document.body.style.overflow = originalOverflow;
+      previouslyFocusedRef.current?.focus();
+    };
+  }, [open, onClose]);
 
   const handleAdd = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -77,8 +127,18 @@ const QuickAddModal: React.FC<QuickAddModalProps> = ({ open, onClose }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40"
+      onMouseDown={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+    >
       <div
+        ref={dialogRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="quick-add-title"
+        aria-describedby="quick-add-description"
         className={`max-w-sm w-full rounded-xl shadow-lg border p-6 relative transition-colors duration-300 ${
           darkMode
             ? "bg-neutral-900 border-neutral-700 text-stone-100"
@@ -86,13 +146,20 @@ const QuickAddModal: React.FC<QuickAddModalProps> = ({ open, onClose }) => {
         }`}
       >
         <button
+          ref={closeButtonRef}
           onClick={onClose}
           className="absolute top-3 right-3 text-stone-400 hover:text-orange-500 text-xl font-bold"
           aria-label="Close quick add"
+          type="button"
         >
           ×
         </button>
-        <h2 className="text-xl font-bold mb-4">Quick Add</h2>
+        <h2 id="quick-add-title" className="text-xl font-bold mb-4">
+          Quick Add
+        </h2>
+        <p id="quick-add-description" className="sr-only">
+          Add an item to your shopping list.
+        </p>
         <form onSubmit={handleAdd}>
           <input
             type="text"

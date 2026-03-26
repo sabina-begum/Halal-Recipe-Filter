@@ -12,7 +12,7 @@ import { useDarkMode } from "@/contexts/DarkModeContext";
  * Educational use only - Commercial use prohibited.
  */
 
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { cookingVideoTutorials } from "@/features/recipes/data/cookingVideoTutorials";
 import type { CookingVideoData } from "@/features/recipes/data/cookingVideoTutorials";
 
@@ -31,6 +31,9 @@ const CookingVideos: React.FC<CookingVideosProps> = ({ recipe }) => {
     null,
   );
   const [showVideoModal, setShowVideoModal] = useState<boolean>(false);
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const previouslyFocusedRef = useRef<HTMLElement | null>(null);
 
   // Extract cooking techniques from recipe instructions (API: strInstructions; featured: instructions or description)
   const extractCookingTechniques = (): Technique[] => {
@@ -190,6 +193,53 @@ const CookingVideos: React.FC<CookingVideosProps> = ({ recipe }) => {
     }
   };
 
+  useEffect(() => {
+    if (!showVideoModal) return;
+    previouslyFocusedRef.current = document.activeElement as HTMLElement | null;
+    closeButtonRef.current?.focus();
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    const getFocusable = () => {
+      const root = dialogRef.current;
+      if (!root) return [] as HTMLElement[];
+      return Array.from(
+        root.querySelectorAll<HTMLElement>(
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+        ),
+      ).filter((el) => !el.hasAttribute("disabled"));
+    };
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        setShowVideoModal(false);
+        return;
+      }
+      if (event.key !== "Tab") return;
+      const focusable = getFocusable();
+      if (!focusable.length) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      const active = document.activeElement as HTMLElement | null;
+
+      if (event.shiftKey && active === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && active === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+
+    document.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.removeEventListener("keydown", onKeyDown);
+      document.body.style.overflow = originalOverflow;
+      previouslyFocusedRef.current?.focus();
+    };
+  }, [showVideoModal]);
+
   if (cookingTechniques.length === 0) {
     return (
       <div
@@ -293,17 +343,30 @@ const CookingVideos: React.FC<CookingVideosProps> = ({ recipe }) => {
       {showVideoModal &&
         selectedTechnique &&
         getVideoForTechnique(selectedTechnique) && (
-          <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4">
+          <div
+            className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4"
+            onMouseDown={(e) => {
+              if (e.target === e.currentTarget) setShowVideoModal(false);
+            }}
+          >
             <div
+              ref={dialogRef}
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="cooking-video-modal-title"
+              aria-describedby="cooking-video-modal-description"
               className={`relative max-w-4xl w-full rounded-lg overflow-hidden ${
                 darkMode ? "bg-gray-900" : "bg-white"
               }`}
             >
               <button
+                ref={closeButtonRef}
                 onClick={() => setShowVideoModal(false)}
                 className={`absolute top-4 right-4 z-10 p-2 rounded-full ${
                   darkMode ? "bg-gray-800 text-white" : "bg-white text-gray-800"
                 } hover:bg-gray-200 transition-colors`}
+                type="button"
+                aria-label="Close cooking video dialog"
               >
                 <svg
                   className="w-6 h-6"
@@ -337,10 +400,16 @@ const CookingVideos: React.FC<CookingVideosProps> = ({ recipe }) => {
                     </div>
 
                     <div className="p-6">
-                      <h3 className="text-xl font-semibold mb-2">
+                      <h3
+                        id="cooking-video-modal-title"
+                        className="text-xl font-semibold mb-2"
+                      >
                         {video.title}
                       </h3>
-                      <p className="text-gray-600 dark:text-stone-300 mb-3">
+                      <p
+                        id="cooking-video-modal-description"
+                        className="text-gray-600 dark:text-stone-300 mb-3"
+                      >
                         {video.description}
                       </p>
                       <div className="flex items-center text-sm text-gray-500">

@@ -215,7 +215,7 @@ export default function HomePage({
                   </p>
                   <Link
                     to={`/recipe/${recipe.id}`}
-                    className="mt-auto inline-block text-center px-4 py-2 rounded bg-green-600 hover:bg-green-700 text-white font-medium transition"
+                    className="mt-auto inline-block text-center px-4 py-2 rounded bg-green-700 hover:bg-green-800 text-white font-medium transition"
                   >
                     View Recipe
                   </Link>

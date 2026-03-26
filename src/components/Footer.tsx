@@ -64,9 +64,9 @@ function Footer() {
 
         {/* Navigation */}
         <nav aria-label="Footer navigation" className="col-span-1">
-          <h3 className="text-base font-semibold text-stone-700 dark:text-stone-200 mb-3">
+          <h2 className="text-base font-semibold text-stone-700 dark:text-stone-200 mb-3">
             Explore
-          </h3>
+          </h2>
           <ul className="space-y-2 text-sm">
             <li>
               <Link
@@ -108,14 +108,24 @@ function Footer() {
                 Terms
               </Link>
             </li>
+            <li>
+              <a
+                href="/docs/ACCESSIBILITY_STATEMENT.md"
+                className="hover:text-orange-600 dark:hover:text-orange-400 transition-colors text-stone-600 dark:text-stone-300"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Accessibility Statement
+              </a>
+            </li>
           </ul>
         </nav>
 
         {/* Newsletter Signup */}
         <div className="col-span-1">
-          <h3 className="text-base font-semibold text-stone-700 dark:text-stone-200 mb-3">
+          <h2 className="text-base font-semibold text-stone-700 dark:text-stone-200 mb-3">
             Newsletter
-          </h3>
+          </h2>
           <p className="text-xs text-stone-500 dark:text-stone-400 mb-3">
             Get the latest recipes, tips, and culinary news. No spam, ever.
           </p>
@@ -138,7 +148,7 @@ function Footer() {
             />
             <button
               type="submit"
-              className="bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-md px-4 py-2 text-sm transition disabled:opacity-60"
+              className="bg-orange-700 hover:bg-orange-800 text-white font-semibold rounded-md px-4 py-2 text-sm transition disabled:opacity-60"
               disabled={submitted}
             >
               {submitted ? "Subscribed!" : "Subscribe"}
@@ -148,9 +158,9 @@ function Footer() {
 
         {/* Contact & Socials */}
         <div className="col-span-1 flex flex-col gap-3">
-          <h3 className="text-base font-semibold text-stone-700 dark:text-stone-200 mb-3">
+          <h2 className="text-base font-semibold text-stone-700 dark:text-stone-200 mb-3">
             Connect
-          </h3>
+          </h2>
           <a
             href="mailto:begumsabina81193@gmail.com"
             className="text-stone-600 dark:text-stone-300 hover:text-green-700 dark:hover:text-green-300 text-sm transition-colors"

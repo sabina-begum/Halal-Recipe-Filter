@@ -257,8 +257,8 @@ const Favorites: React.FC = () => {
               className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-colors ${
                 filter === option.value
                   ? darkMode
-                    ? "bg-green-600 text-white shadow-lg"
-                    : "bg-green-500 text-white shadow-lg"
+                    ? "bg-green-700 text-white shadow-lg"
+                    : "bg-green-700 text-white shadow-lg"
                   : darkMode
                     ? "bg-stone-700 text-stone-200 hover:bg-stone-600"
                     : "bg-white text-gray-700 hover:bg-gray-50 border border-gray-200"
@@ -283,9 +283,9 @@ const Favorites: React.FC = () => {
             <div className="text-6xl mb-4 text-red-500 leading-none">
               <Heart className="inline-block w-[1em] h-[1em]" aria-hidden />
             </div>
-            <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
               No favorites yet
-            </h3>
+            </h2>
             <p className="text-gray-600 dark:text-stone-300 mb-6">
               Start exploring recipes and add them to your favorites!
             </p>
@@ -320,9 +320,9 @@ const Favorites: React.FC = () => {
                 </div>
 
                 <div className="p-4">
-                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+                  <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
                     {recipe.title}
-                  </h3>
+                  </h2>
                   <p className="text-gray-600 dark:text-stone-300 text-sm mb-3 line-clamp-2">
                     {recipe.description}
                   </p>

@@ -1,5 +1,5 @@
 import { useDarkMode } from "@/contexts/DarkModeContext";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   UtensilsCrossed,
   Clock,
@@ -54,6 +54,9 @@ const NotificationsModal: React.FC<NotificationsModalProps> = ({
   const { darkMode } = useDarkMode()!;
   const { currentUser } = useAuth();
   const [notifications, setNotifications] = useState<Notification[]>([]);
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const previouslyFocusedRef = useRef<HTMLElement | null>(null);
 
   // Load notifications from localStorage (same key for demo and real users)
   useEffect(() => {
@@ -77,6 +80,53 @@ const NotificationsModal: React.FC<NotificationsModalProps> = ({
     // Note: setNotificationsCount is not available in ModalContext
     // This would need to be implemented if notifications count is needed
   }, [notifications]);
+
+  useEffect(() => {
+    if (!open) return;
+    previouslyFocusedRef.current = document.activeElement as HTMLElement | null;
+    closeButtonRef.current?.focus();
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    const getFocusable = () => {
+      const root = dialogRef.current;
+      if (!root) return [] as HTMLElement[];
+      return Array.from(
+        root.querySelectorAll<HTMLElement>(
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+        ),
+      ).filter((el) => !el.hasAttribute("disabled"));
+    };
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        onClose();
+        return;
+      }
+      if (event.key !== "Tab") return;
+      const focusable = getFocusable();
+      if (!focusable.length) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      const active = document.activeElement as HTMLElement | null;
+
+      if (event.shiftKey && active === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && active === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+
+    document.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.removeEventListener("keydown", onKeyDown);
+      document.body.style.overflow = originalOverflow;
+      previouslyFocusedRef.current?.focus();
+    };
+  }, [open, onClose]);
 
   // Mark as read (persist for both demo and real users)
   const markAsRead = (id: number): void => {
@@ -107,8 +157,18 @@ const NotificationsModal: React.FC<NotificationsModalProps> = ({
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40"
+      onMouseDown={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+    >
       <div
+        ref={dialogRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="notifications-title"
+        aria-describedby="notifications-description"
         className={`max-w-md w-full rounded-xl shadow-lg border p-6 relative transition-colors duration-300 ${
           darkMode
             ? "bg-neutral-900 border-neutral-700 text-stone-100"
@@ -116,13 +176,20 @@ const NotificationsModal: React.FC<NotificationsModalProps> = ({
         }`}
       >
         <button
+          ref={closeButtonRef}
           onClick={onClose}
           className="absolute top-3 right-3 text-stone-400 hover:text-orange-500 text-xl font-bold"
           aria-label="Close notifications"
+          type="button"
         >
           ×
         </button>
-        <h2 className="text-xl font-bold mb-4">Notifications</h2>
+        <h2 id="notifications-title" className="text-xl font-bold mb-4">
+          Notifications
+        </h2>
+        <p id="notifications-description" className="sr-only">
+          Review and manage your recent notifications.
+        </p>
         <ul className="divide-y divide-stone-200 dark:divide-neutral-700">
           {notifications.length === 0 && (
             <div className="text-stone-400 text-center py-6">

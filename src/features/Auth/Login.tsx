@@ -167,7 +167,7 @@ function Login(): React.ReactNode {
       }`}
     >
       <div
-        className={`rounded-2xl shadow-2xl border-2 py-6 sm:py-8 lg:py-10 px-6 sm:px-8 lg:px-10 min-w-[500px] ${
+        className={`w-full max-w-lg rounded-2xl shadow-2xl border-2 py-6 sm:py-8 lg:py-10 px-6 sm:px-8 lg:px-10 ${
           darkMode
             ? "bg-neutral-900 border-neutral-700"
             : "bg-white border-gray-200"

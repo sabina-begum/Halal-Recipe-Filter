@@ -64,7 +64,7 @@ const Signup = (): React.ReactNode => {
         const code = (error as { code: string }).code;
         if (code === "auth/email-already-in-use") {
           setError(
-            "An account with this email already exists. Please try logging in instead."
+            "An account with this email already exists. Please try logging in instead.",
           );
         } else if (code === "auth/invalid-email") {
           setError("Please enter a valid email address.");
@@ -72,7 +72,7 @@ const Signup = (): React.ReactNode => {
           setError("Password is too weak. Please choose a stronger password.");
         } else if (code === "auth/operation-not-allowed") {
           setError(
-            "Email/password accounts are not enabled. Please contact support."
+            "Email/password accounts are not enabled. Please contact support.",
           );
         } else {
           setError("Failed to create an account. Please try again.");
@@ -92,7 +92,7 @@ const Signup = (): React.ReactNode => {
       }`}
     >
       <div
-        className={`rounded-2xl shadow-2xl border-2 py-6 sm:py-8 lg:py-10 px-6 sm:px-8 lg:px-10 ${
+        className={`w-full max-w-lg rounded-2xl shadow-2xl border-2 py-6 sm:py-8 lg:py-10 px-6 sm:px-8 lg:px-10 ${
           darkMode
             ? "bg-neutral-900 border-neutral-700"
             : "bg-white border-gray-200"
@@ -110,10 +110,14 @@ const Signup = (): React.ReactNode => {
 
         <form onSubmit={handleSubmit} className="space-y-6 max-w-2xl mx-auto">
           <div>
-            <label className="block text-sm font-medium mb-2">
+            <label
+              htmlFor="signup-display-name"
+              className="block text-sm font-medium mb-2"
+            >
               Display Name
             </label>
             <input
+              id="signup-display-name"
               type="text"
               value={displayName}
               onChange={(e) => setDisplayName(e.target.value)}
@@ -126,8 +130,14 @@ const Signup = (): React.ReactNode => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-2">Email</label>
+            <label
+              htmlFor="signup-email"
+              className="block text-sm font-medium mb-2"
+            >
+              Email
+            </label>
             <input
+              id="signup-email"
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -141,8 +151,14 @@ const Signup = (): React.ReactNode => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-2">Password</label>
+            <label
+              htmlFor="signup-password"
+              className="block text-sm font-medium mb-2"
+            >
+              Password
+            </label>
             <input
+              id="signup-password"
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -157,10 +173,14 @@ const Signup = (): React.ReactNode => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-2">
+            <label
+              htmlFor="signup-confirm-password"
+              className="block text-sm font-medium mb-2"
+            >
               Confirm Password
             </label>
             <input
+              id="signup-confirm-password"
               type="password"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}

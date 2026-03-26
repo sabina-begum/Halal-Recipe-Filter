@@ -12,7 +12,7 @@ import { useDarkMode } from "@/contexts/DarkModeContext";
  * Educational use only - Commercial use prohibited.
  */
 
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import { useAuth } from "@/contexts/useAuth";
 import { featuredRecipes } from "@/features/recipes/data/recipes";
 
@@ -47,6 +47,9 @@ const MealPlanningCalendar: React.FC = () => {
   );
   const [availableRecipes, setAvailableRecipes] = useState<Recipe[]>([]);
   const [searchTerm, setSearchTerm] = useState<string>("");
+  const recipeDialogRef = useRef<HTMLDivElement>(null);
+  const recipeCloseButtonRef = useRef<HTMLButtonElement>(null);
+  const previouslyFocusedRef = useRef<HTMLElement | null>(null);
 
   const mealTypes: string[] = ["Breakfast", "Lunch", "Dinner", "Snack"];
   const daysOfWeek: string[] = [
@@ -194,6 +197,53 @@ const MealPlanningCalendar: React.FC = () => {
       loadAvailableRecipes();
     }
   }, [currentUser, currentDate, loadMealPlan, loadAvailableRecipes]);
+
+  useEffect(() => {
+    if (!showRecipeModal) return;
+    previouslyFocusedRef.current = document.activeElement as HTMLElement | null;
+    recipeCloseButtonRef.current?.focus();
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    const getFocusable = () => {
+      const root = recipeDialogRef.current;
+      if (!root) return [] as HTMLElement[];
+      return Array.from(
+        root.querySelectorAll<HTMLElement>(
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+        ),
+      ).filter((el) => !el.hasAttribute("disabled"));
+    };
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        setShowRecipeModal(false);
+        return;
+      }
+      if (event.key !== "Tab") return;
+      const focusable = getFocusable();
+      if (!focusable.length) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      const active = document.activeElement as HTMLElement | null;
+
+      if (event.shiftKey && active === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && active === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+
+    document.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.removeEventListener("keydown", onKeyDown);
+      document.body.style.overflow = originalOverflow;
+      previouslyFocusedRef.current?.focus();
+    };
+  }, [showRecipeModal]);
 
   const saveMealPlan = (newMeals: MealsState): void => {
     try {
@@ -357,6 +407,8 @@ const MealPlanningCalendar: React.FC = () => {
                 className={`p-2 rounded-lg transition-colors ${
                   darkMode ? "hover:bg-stone-800" : "hover:bg-stone-100"
                 }`}
+                aria-label="Previous month"
+                type="button"
               >
                 <svg
                   className="w-4 h-4 sm:w-5 sm:h-5"
@@ -389,6 +441,8 @@ const MealPlanningCalendar: React.FC = () => {
                 className={`p-2 rounded-lg transition-colors ${
                   darkMode ? "hover:bg-stone-800" : "hover:bg-stone-100"
                 }`}
+                aria-label="Next month"
+                type="button"
               >
                 <svg
                   className="w-4 h-4 sm:w-5 sm:h-5"
@@ -411,11 +465,12 @@ const MealPlanningCalendar: React.FC = () => {
                 onClick={() => setView("week")}
                 className={`px-2 sm:px-3 py-1 rounded-lg text-xs sm:text-sm font-medium transition-colors ${
                   view === "week"
-                    ? "bg-orange-500 text-white"
+                    ? "bg-orange-700 text-white"
                     : darkMode
                       ? "bg-stone-700 text-stone-300"
                       : "bg-stone-200 text-stone-700"
                 }`}
+                type="button"
               >
                 Week
               </button>
@@ -423,11 +478,12 @@ const MealPlanningCalendar: React.FC = () => {
                 onClick={() => setView("month")}
                 className={`px-2 sm:px-3 py-1 rounded-lg text-xs sm:text-sm font-medium transition-colors ${
                   view === "month"
-                    ? "bg-orange-500 text-white"
+                    ? "bg-orange-700 text-white"
                     : darkMode
                       ? "bg-stone-700 text-stone-300"
                       : "bg-stone-200 text-stone-700"
                 }`}
+                type="button"
               >
                 Month
               </button>
@@ -577,23 +633,42 @@ const MealPlanningCalendar: React.FC = () => {
 
       {/* Recipe Selection Modal */}
       {showRecipeModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-3 sm:p-4">
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-3 sm:p-4"
+          onMouseDown={(e) => {
+            if (e.target === e.currentTarget) setShowRecipeModal(false);
+          }}
+        >
           <div
+            ref={recipeDialogRef}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="meal-plan-recipe-modal-title"
+            aria-describedby="meal-plan-recipe-modal-description"
             className={`max-w-2xl w-full max-h-[90vh] sm:max-h-[80vh] overflow-y-auto rounded-xl shadow-lg ${
               darkMode ? "bg-stone-800" : "bg-white"
             }`}
           >
             <div className="p-4 sm:p-6">
               <div className="flex justify-between items-center mb-4">
-                <h3 className="text-lg sm:text-xl font-semibold">
+                <h3
+                  id="meal-plan-recipe-modal-title"
+                  className="text-lg sm:text-xl font-semibold"
+                >
                   Add Meal for {selectedMealSlot?.date.toLocaleDateString()} -{" "}
                   {selectedMealSlot?.mealType}
                 </h3>
+                <p id="meal-plan-recipe-modal-description" className="sr-only">
+                  Search recipes and select one to assign to this meal slot.
+                </p>
                 <button
+                  ref={recipeCloseButtonRef}
                   onClick={() => setShowRecipeModal(false)}
                   className={`p-2 rounded-lg ${
                     darkMode ? "hover:bg-stone-700" : "hover:bg-stone-100"
                   }`}
+                  type="button"
+                  aria-label="Close add meal dialog"
                 >
                   <svg
                     className="w-4 h-4 sm:w-5 sm:h-5"

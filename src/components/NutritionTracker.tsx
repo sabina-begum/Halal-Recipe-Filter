@@ -493,10 +493,14 @@ const NutritionTracker: React.FC = () => {
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             <div>
-              <label className="block text-sm font-medium text-neutral-50 dark:text-stone-300 mb-2">
+              <label
+                htmlFor="nutrition-age"
+                className="block text-sm font-medium text-gray-700 dark:text-stone-300 mb-2"
+              >
                 Age
               </label>
               <input
+                id="nutrition-age"
                 type="number"
                 value={age}
                 onChange={(e) => setAge(parseInt(e.target.value))}
@@ -504,10 +508,14 @@ const NutritionTracker: React.FC = () => {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-neutral-300 dark:text-stone-300 mb-2">
+              <label
+                htmlFor="nutrition-weight"
+                className="block text-sm font-medium text-gray-700 dark:text-stone-300 mb-2"
+              >
                 Weight (kg)
               </label>
               <input
+                id="nutrition-weight"
                 type="number"
                 value={weight}
                 onChange={(e) => setWeight(parseFloat(e.target.value))}
@@ -515,10 +523,14 @@ const NutritionTracker: React.FC = () => {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-neutral-300 dark:text-stone-300 mb-2">
+              <label
+                htmlFor="nutrition-height"
+                className="block text-sm font-medium text-gray-700 dark:text-stone-300 mb-2"
+              >
                 Height (cm)
               </label>
               <input
+                id="nutrition-height"
                 type="number"
                 value={height}
                 onChange={(e) => setHeight(parseFloat(e.target.value))}
@@ -526,10 +538,14 @@ const NutritionTracker: React.FC = () => {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-neutral-300 dark:text-stone-300 mb-2">
+              <label
+                htmlFor="nutrition-gender"
+                className="block text-sm font-medium text-gray-700 dark:text-stone-300 mb-2"
+              >
                 Gender
               </label>
               <select
+                id="nutrition-gender"
                 value={gender}
                 onChange={(e) => setGender(e.target.value)}
                 className="w-full px-3 py-2 border border-stone-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
@@ -539,10 +555,14 @@ const NutritionTracker: React.FC = () => {
               </select>
             </div>
             <div>
-              <label className="block text-sm font-medium text-neutral-300 dark:text-neutral-300 mb-2">
+              <label
+                htmlFor="nutrition-activity"
+                className="block text-sm font-medium text-gray-700 dark:text-neutral-300 mb-2"
+              >
                 Activity Level
               </label>
               <select
+                id="nutrition-activity"
                 value={activityLevel}
                 onChange={(e) => setActivityLevel(e.target.value)}
                 className="w-full px-3 py-2 border border-stone-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
@@ -555,10 +575,14 @@ const NutritionTracker: React.FC = () => {
               </select>
             </div>
             <div>
-              <label className="block text-sm font-medium text-neutral-300 dark:text-stone-300 mb-2">
+              <label
+                htmlFor="nutrition-goal"
+                className="block text-sm font-medium text-gray-700 dark:text-stone-300 mb-2"
+              >
                 Goal
               </label>
               <select
+                id="nutrition-goal"
                 value={goal}
                 onChange={(e) => setGoal(e.target.value)}
                 className="w-full px-3 py-2 border border-stone-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
@@ -571,7 +595,8 @@ const NutritionTracker: React.FC = () => {
           </div>
           <button
             onClick={calculateNutritionGoals}
-            className="mt-4 bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-md transition-colors"
+            className="mt-4 bg-green-700 hover:bg-green-800 text-white px-6 py-2 rounded-md transition-colors"
+            type="button"
           >
             Calculate Goals
           </button>
@@ -583,7 +608,11 @@ const NutritionTracker: React.FC = () => {
             <h2 className="text-2xl font-bold text-green-900 dark:text-green-300">
               Daily Log
             </h2>
+            <label htmlFor="nutrition-selected-date" className="sr-only">
+              Select log date
+            </label>
             <input
+              id="nutrition-selected-date"
               type="date"
               value={selectedDate}
               onChange={(e) => setSelectedDate(e.target.value)}
@@ -697,7 +726,8 @@ const NutritionTracker: React.FC = () => {
             </h3>
             <button
               onClick={() => setShowAddMeal(!showAddMeal)}
-              className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md transition-colors"
+              className="bg-green-700 hover:bg-green-800 text-white px-4 py-2 rounded-md transition-colors"
+              type="button"
             >
               {showAddMeal ? "Cancel" : "Add Meal"}
             </button>

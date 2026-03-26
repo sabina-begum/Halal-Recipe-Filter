@@ -11,9 +11,9 @@ export default function ProfileHeader({
   const { darkMode } = useDarkMode()!;
   return (
     <div className="flex justify-between items-center mb-6">
-      <h2 className="text-2xl font-bold bg-gradient-to-r from-orange-500 to-amber-500 bg-clip-text text-transparent">
+      <h1 className="text-2xl font-bold bg-gradient-to-r from-orange-500 to-amber-500 bg-clip-text text-transparent">
         Profile Settings
-      </h2>
+      </h1>
       <button
         onClick={onToggleEdit}
         className={`px-4 py-2 rounded-lg font-medium transition-colors ${

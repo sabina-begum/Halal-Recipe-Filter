@@ -13,7 +13,7 @@ export default function DietaryRestrictionsSection({
 }: DietaryRestrictionsSectionProps) {
   return (
     <div>
-      <h3 className="text-lg font-semibold mb-3">Dietary Restrictions</h3>
+      <h2 className="text-lg font-semibold mb-3">Dietary Restrictions</h2>
       <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
         {dietaryOptions.map((option) => (
           <label key={option} className="flex items-center space-x-2">

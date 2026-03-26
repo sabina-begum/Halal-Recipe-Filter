@@ -13,7 +13,7 @@ export default function FavoriteCuisinesSection({
 }: FavoriteCuisinesSectionProps) {
   return (
     <div>
-      <h3 className="text-lg font-semibold mb-3">Favorite Cuisines</h3>
+      <h2 className="text-lg font-semibold mb-3">Favorite Cuisines</h2>
       <div className="grid grid-cols-2 md:grid-cols-5 gap-2">
         {cuisineOptions.map((cuisine) => (
           <label key={cuisine} className="flex items-center space-x-2">
