@@ -14,12 +14,8 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
-import { HelmetProvider } from "react-helmet-async";
 
 import App from "./App";
-import { SecurityProvider } from "./components/SecurityWrapper";
-import { ModalProvider } from "./contexts/ModalContext";
-import { DarkModeProvider } from "./contexts/DarkModeContext";
 import Watermark, { ConsoleWatermark } from "./components/Watermark";
 
 import "./index.css";
@@ -34,19 +30,11 @@ const root = createRoot(container);
 
 root.render(
   <React.StrictMode>
-    <HelmetProvider>
-      <BrowserRouter>
-        <SecurityProvider>
-          <DarkModeProvider>
-            <ModalProvider>
-              <App />
-              <Watermark />
-              <ConsoleWatermark />
-            </ModalProvider>
-          </DarkModeProvider>
-        </SecurityProvider>
-      </BrowserRouter>
-    </HelmetProvider>
+    <BrowserRouter>
+      <App />
+      <Watermark />
+      <ConsoleWatermark />
+    </BrowserRouter>
   </React.StrictMode>,
 );
 

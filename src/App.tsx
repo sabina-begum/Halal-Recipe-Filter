@@ -65,8 +65,8 @@ function App() {
 
   const handleSearch = useCallback(
     async (query: string) => {
-      console.log("App handleSearch called with:", query);
       if (!query.trim()) return;
+      console.log("App handleSearch called with:", query);
 
       setLoading(true);
       setError(null);
@@ -165,7 +165,7 @@ function App() {
 
   useEffect(() => {
     // Only perform initial search if not on auth page
-    if (!isAuthPage) {
+    if (!isAuthPage && initialSearch.trim()) {
       handleSearch(initialSearch);
     }
   }, [handleSearch, initialSearch, isAuthPage]);
